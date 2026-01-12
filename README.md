@@ -1,5 +1,4 @@
 # rag-ollama-set-up
-# rag-ollama-set-up
 
 Windows local RAG setup using:
 - Ollama (LLM + embeddings)
@@ -19,3 +18,26 @@ Windows local RAG setup using:
 ```powershell
 ollama pull bge-m3
 ollama pull gemma3:4b
+## 2) Bootstrap
+.\powershell\00_bootstrap.ps1
+
+## 3) create db + tables
+.\powershell\01_setup_db.ps1
+
+## 4) set env vars
+. .\powershell\02_env.ps1
+
+##avoid password prompts
+$env:PGPASSWORD = "<your_postgres_password>"
+
+## 5) ingest docs
+py .\scripts\ingest.py --path .\sample_docs --source pilot
+
+## 6) ask the RAG
+py .\scripts\ask_rag.py "What is dbt used for?"
+
+## 7) promote verified Q/A back into RAG
+py .\scripts\promote_qa_to_chunks.py --only-verified --limit 50
+
+## 8) verify tables/logs
+.\powershell\03_verify.ps1
