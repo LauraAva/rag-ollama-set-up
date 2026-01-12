@@ -1,1 +1,21 @@
 # rag-ollama-set-up
+rag-ollama-set-up/
+  README.md
+  .gitignore
+  LICENSE
+  docs/
+    RUNBOOK_Windows.md
+    PGVECTOR_BUILD_Windows.md
+    TROUBLESHOOTING.md
+  powershell/
+    setup_rag.ps1
+    env.ps1
+    verify.ps1
+  sql/
+    rag_setup.sql
+  scripts/
+    ingest.py
+    ask_rag.py
+    promote_qa_to_chunks.py
+  sample_docs/
+    intro.txt
