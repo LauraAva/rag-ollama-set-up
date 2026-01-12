@@ -1,21 +1,21 @@
 # rag-ollama-set-up
-rag-ollama-set-up/
-  README.md
-  .gitignore
-  LICENSE
-  docs/
-    RUNBOOK_Windows.md
-    PGVECTOR_BUILD_Windows.md
-    TROUBLESHOOTING.md
-  powershell/
-    setup_rag.ps1
-    env.ps1
-    verify.ps1
-  sql/
-    rag_setup.sql
-  scripts/
-    ingest.py
-    ask_rag.py
-    promote_qa_to_chunks.py
-  sample_docs/
-    intro.txt
+# rag-ollama-set-up
+
+Windows local RAG setup using:
+- Ollama (LLM + embeddings)
+- PostgreSQL 16
+- pgvector extension
+- Python scripts for ingestion + retrieval + Q/A logging + promotion
+
+## Quickstart (Windows)
+
+### 0) Prereqs
+- Ollama installed and running
+- Python installed (`py --version`)
+- PostgreSQL 16 installed (server + psql)
+- pgvector installed into PostgreSQL (see docs/PGVECTOR_BUILD_Windows.md)
+
+### 1) Pull models
+```powershell
+ollama pull bge-m3
+ollama pull gemma3:4b
