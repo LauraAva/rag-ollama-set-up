@@ -1,0 +1,32 @@
+
+---
+
+## `.gitignore`
+```gitignore
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.env
+.env.*
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local data / dumps
+data/
+*.sql.bak
+*.dump
+*.backup
+
+# IDE
+.vscode/
+.idea/
+
+# Ollama / model cache (do not commit)
+.ollama/
