@@ -7,7 +7,7 @@ Local RAG (Retrieval-Augmented Generation) setup using:
 
 ---
 
-## 1️⃣ Setup Summary
+## Setup Summary
 
 1. **Install PostgreSQL (v16+)**
 2. **Build pgvector** (see [docs/PGVECTOR_BUILD_Windows.md](docs/PGVECTOR_BUILD_Windows.md))
@@ -19,22 +19,23 @@ Local RAG (Retrieval-Augmented Generation) setup using:
 
 ---
 
-## 🧩 Folder Layout
+## Folder Layout
 
-ag-ollama-set-up/
+```text
+rag-ollama-set-up/
 ├── README.md
 ├── requirements.txt
 ├── .gitignore
 ├── LICENSE
 ├── docs/
-│ ├── PGVECTOR_BUILD_Windows.md
-│ ├── RUNBOOK_Windows.md
-│ └── TROUBLESHOOTING.md
+│   ├── PGVECTOR_BUILD_Windows.md
+│   ├── RUNBOOK_Windows.md
+│   └── TROUBLESHOOTING.md
 ├── sql/
-│ └── rag_setup.sql
+│   └── rag_setup.sql
 ├── scripts/
-│ ├── ingest.py
-│ ├── ask_rag.py
-│ └── promote_qa_to_chunks.py
+│   ├── ingest.py
+│   ├── ask_rag.py
+│   └── promote_qa_to_chunks.py
 └── sample_docs/
-└── intro.txt
+    └── intro.txt
