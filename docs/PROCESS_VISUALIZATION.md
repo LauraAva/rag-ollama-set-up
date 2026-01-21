@@ -84,15 +84,6 @@ flowchart TD
 
 
 
-\\\\## C) Why GitHub shows it wrong sometimes
-
-Mermaid renders on GitHub only if:
-
-\\\\- the file is `.md`
-
-\\\\- the diagram is inside a fenced block exactly like:
-
-
 
 ```
 
