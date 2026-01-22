@@ -1,8 +1,5 @@
 # \# Process Visualization — rag-ollama-set-up (end-to-end)
 
-# 
-
-\## 1) Big Picture: Setup → Runtime
 
 
 ```mermaid
