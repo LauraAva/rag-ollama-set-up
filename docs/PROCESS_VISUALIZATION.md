@@ -2,9 +2,9 @@
 
 # 
 
+```mermaid
 \## 1) Big Picture: Setup → Runtime
 
-```mermaid
 
 flowchart TD
 
