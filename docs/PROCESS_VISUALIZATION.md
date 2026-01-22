@@ -4,7 +4,7 @@
 
 \## 1) Big Picture: Setup → Runtime
 
-
+```mermaid
 
 flowchart TD
 
@@ -50,3 +50,4 @@ end
 
 Setup --> Ingest --> Ask
 Ask --> Tests
+```
