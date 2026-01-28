@@ -54,8 +54,6 @@ flowchart TD
   F --> DONE
 end
 
-DONE --> E
-
 ```
 
 ---
