@@ -17,11 +17,10 @@ flowchart TD
   S2 --> R0["▶ Start Runtime"]
 
   subgraph Runtime["Runtime"]
-    R0 --> Ingest["📥 Ingest docs (ingest.py)"]
-    Ingest --> Chunk["✂️ Chunk text"]
-    Chunk --> EmbedDocs["🧠 Embed docs (bge-m3)"]
-    EmbedDocs --> Store["🗄️ Store in rag_chunks"]
+    R1["📥 Ingest docs (scripts/ingest.py)"] --> R2["✂️ Chunk text"] --> R3["🧠 Embed docs (bge-m3)"] --> R4["🗄️ Store in rag_chunks"]
   end
+
+  R0 --> R1
 ```
 ---
 
