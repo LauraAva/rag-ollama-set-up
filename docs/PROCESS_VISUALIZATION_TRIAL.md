@@ -14,14 +14,18 @@ flowchart TD
     S1["Install + Configure"] --> S2["DB ready + Models ready"]
   end  
 
-  %% Put the entry node OUTSIDE the Runtime subgraph
-  S2 --> R0["▶ Start Runtime"]
+  subgraph Runtime["Runtime"]
+    direction TB
 
-  subgraph Runtime 
-    R1["📥 Ingest docs (scripts/ingest.py)"] --> R2["✂️ Chunk text"] --> R3["🧠 Embed docs (bge-m3)"] --> R4["🗄️ Store in rag_chunks"]
+    R1(( )):::ghost
+    R2["📥 Ingest docs (scripts/ingest.py)"] --> R3["✂️ Chunk text"] --> R4["🧠 Embed docs (bge-m3)"] --> R5["🗄️ Store in rag_chunks"]
+
+    R1 --> R2
   end
 
-  R0 --> R1
+  S2 --> R1
+
+  classDef ghost fill:transparent,stroke:transparent,color:transparent;
 ```
 ---
 
