@@ -24,7 +24,7 @@ flowchart TD
   R --> G{🎯 Relevant enough?}
 
   G -- "No 😕" --> N[🙅 Reply: Not enough info<br/>Ask user for more context]
-  N e1@--> L1[(📝 Log to qa_log)]
+  N --> L1[(📝 Log to qa_log)]
   classDef animate stroke-dasharray: 9,5,stroke-dashoffset: 900,animation: dash 25s linear infinite;
   class e1 animate
 
@@ -40,7 +40,10 @@ flowchart TD
 
   V -- "Yes" --> DONE
   V -- "No" --> F[(🗳️ Store feedback / failure)]
-  F --> DONE ----> E[End]
+  F --> DONE
+end
+
+DONE --> E["🏁 End"]
 
 ```
 
