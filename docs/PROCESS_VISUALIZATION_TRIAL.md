@@ -17,10 +17,18 @@ flowchart TD
   subgraph Runtime["Runtime<br/>"]
 
 
-    R1(( )):::hidden
-    R2["📥 Ingest docs (scripts/ingest.py)"] --> R3["✂️ Chunk text"] --> R4["🧠 Embed docs (bge-m3)"] --> R5["🗄️ Store in rag_chunks"]
+    Entry(( )):::hidden
+    Entry --> Ingest ["📥 Ingest docs<br/> (scripts/ingest.py)"]
+    Ingest--> Chunk ["✂️ Split into chunks"]
+    Chunk --> EmbedDocs["🧠 create embeddingsbr/>(bge-m3)"]
+    EmbedDocs --> Store["🗄️ Store in rag_chunks"]
+end
 
-  end
+%% Connect Setup to Runtime through the ENTRY node (prevents arrow hitting title)
+  S2 --> ENTRY
+
+  %% Invisible node style
+  classDef hidden fill:transparent,stroke:transparent,color:transparent;
 
 ```
 ---
