@@ -29,7 +29,7 @@ flowchart TD
 flowchart TD
 
   UA(["🔐 User authentication enabled?"])
-  UA -- "No ❌" --> N["❌ Access denied"]
+  UA -- "No ❌" --> X["❌ Access denied"]
   Denied --> END0["⛔ End"]
 
   UA -- "Yes ✅" --> U["👤 User asks a question"]
