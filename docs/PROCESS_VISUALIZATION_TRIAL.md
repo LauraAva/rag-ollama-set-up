@@ -9,6 +9,7 @@ This page visualizes the full workflow we implemented:
 
 ```mermaid
 flowchart TD
+
   subgraph Setup["Setup"]
     S1["Install + Configure"] --> S2["DB ready + Models ready"]
   
@@ -20,8 +21,10 @@ flowchart TD
     Ingest --> Chunk["✂️ Chunk text"]
     Chunk --> EmbedDocs["🧠 Embed docs (bge-m3)"]
     EmbedDocs --> Store["🗄️ Store in rag_chunks"]
-  
+```
+---
 
+```mermaid
   U([👤 User asks a question]) --> Q[🧠 Embed question<br/>Ollama: bge-m3]
 
   Q --> S[🔎 Search the database for most similar saved parts]
