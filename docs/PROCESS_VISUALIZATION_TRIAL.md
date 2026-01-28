@@ -37,18 +37,14 @@ flowchart TD
   OK -- "Yes" --> ROLE["🏷️ Load user role + groups"]
 
   ROLE --> PERM["🛡️ Permission check<br/>what data can this user access?"]
-  PERM --> ALLOW{"✅ Has any RAG access?"}
-  ALLOW -- "No" --> DENY --> END0
+  PERM --> HASACCESS{Any access at all?}
+  HASACCESS -- "No" --> DENY --> END0
+  HASACCESS -- "Yes" --> ROUTE[RAG routing rules]
 
-  ALLOW -- "Yes" --> ROUTER{"🧭 Choose allowed RAG scope<br/>(collection routing)"}
-
-  ROUTER -->|Client RAG| CRAG["🗂️ Client RAG<br/>(collection=client)"]
-  ROUTER -->|Internal RAG| IRAG["🏢 Internal RAG<br/>(collection=internal)"]
-  ROUTER -->|External RAG| ERAG["🌍 External RAG<br/>(collection=external)"]
-
-  CRAG --> QV["🧠 Embed question<br/>(Ollama: bge-m3)"]
-  IRAG --> QV
-  ERAG --> QV
+  ROUTE --> HASRAG{Is there a RAG for this question?}
+  HASRAG -- "No" --> LLMONLY[Ask LLM directly (no RAG)]
+  HASRAG -- "Yes" --> QEMB[Embed question (bge-m3)]
+  
 
   Q --> S[🔎 Search the database for most similar saved parts]
   S --> R[📦 Pick the 5 most relevant text snippets and how strongly they match the question]
