@@ -30,7 +30,7 @@ flowchart TD
 
   UA(["🔐 User authentication enabled?"])
   UA -- "No ❌" --> X["❌ Access denied"]
-  Denied --> END0["⛔ End"]
+
 
   UA -- "Yes ✅" --> U["👤 User asks a question"]
   U --> Q["🧠 Embed question (Ollama: bge-m3)"]
