@@ -12,7 +12,7 @@ flowchart TD
 
   subgraph Setup["Setup"]
     S1["Install + Configure"] --> S2["DB ready + Models ready"]
-  
+  end  
 
   S2 --> R0["▶ Start Runtime"]
 
@@ -21,6 +21,7 @@ flowchart TD
     Ingest --> Chunk["✂️ Chunk text"]
     Chunk --> EmbedDocs["🧠 Embed docs (bge-m3)"]
     EmbedDocs --> Store["🗄️ Store in rag_chunks"]
+  end
 ```
 ---
 
