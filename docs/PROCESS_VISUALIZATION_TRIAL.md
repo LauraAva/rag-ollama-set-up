@@ -28,22 +28,17 @@ flowchart TD
 ```mermaid
 flowchart TD
 
-  START([🚀 Start]) --> AUTH{"🔐 Authentication enabled?"}
+  START([Start]) --> AUTH{Authentication enabled?}
 
-  AUTH -- "No" --> ROLE["👤 Treat as anonymous / default role"]
-  AUTH -- "Yes" --> LOGIN["🪪 Authenticate user"]
-  LOGIN --> OK{"✅ Auth success?"}
-  OK -- "No" --> DENY["❌ Access denied"] --> END0([⛔ End])
-  OK -- "Yes" --> ROLE["🏷️ Load user role + groups"]
+  AUTH -- "No" --> DENY[❌ Access denied] --> END0([End])
 
-  ROLE --> PERM["🛡️ Permission check<br/>what data can this user access?"]
-  PERM --> HASACCESS{Any access at all?}
-  HASACCESS -- "No" --> DENY --> END0
-  HASACCESS -- "Yes" --> ROUTE[RAG routing rules]
+  AUTH -- "Yes" --> ROLE[👥 Load user role + groups]
+  ROLE --> PERM[🔐 Permission check: what data can this user access?]
 
-  ROUTE --> HASRAG{Is there a RAG for this question?}
-  HASRAG -- "No" --> LLMONLY["Ask LLM directly (no RAG)"]
-  HASRAG -- "Yes" --> QEMB["Embed question (bge-m3)"]
+  PERM --> HASRAG{RAG available for this question/user?}
+
+  HASRAG -- "Yes" --> ROUTE[🧭 Route to respective RAG<br/>(client / internal / external)]
+  ROUTE --> QEMB[🧠 Embed question (bge-m3)]
   
 
   Q --> S[🔎 Search the database for most similar saved parts]
