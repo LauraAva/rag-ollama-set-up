@@ -29,7 +29,7 @@ flowchart TD
 flowchart TD
 
   L1 --> UA([📝 User authentication enabled?])
-  UA -- "No"❌" --> N["❌ Access denied"]
+  UA -- "No ❌" --> N["❌ Access denied"]
 
   UA -- "Yes" --> UX [👤 User asks a question]
   UX --> U([👤 User asks a question]) --> Q[🧠 Embed question<br/>Ollama: bge-m3]
