@@ -38,7 +38,7 @@ flowchart TD
   PERM --> HASRAG{RAG available for this question/user?}
 
   HASRAG -- "Yes" --> ROUTE["🧭 Route to respective RAG<br/>(client / internal / external)"]
-  ROUTE --> QEMB[🧠 Embed question (bge-m3)]
+  ROUTE --> QEMB["🧠 Embed question (bge-m3)"]
   
 
   Q --> S[🔎 Search the database for most similar saved parts]
