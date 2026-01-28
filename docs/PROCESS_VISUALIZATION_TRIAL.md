@@ -1,45 +1,59 @@
 # \# Process Visualization — rag-ollama-set-up (end-to-end)
 
+This page visualizes the full workflow we implemented:
+- PostgreSQL + pgvector (vector DB + HNSW index)
+- Ollama embeddings (bge-m3) + Ollama chat (gemma3:4b)
+- Python scripts for ingestion, retrieval, generation, logging, and testing
 
+---
 
 ```mermaid
 flowchart TD
 
-subgraph Setup["Setup (do this once)"]
-  S1["Install Ollama (runs the local AI models)"] --> S2["Download the models: bge-m3 (creates embeddings), gemma3:4b (writes answers)"]
+ subgraph Runtime["Runtime"]
 
-  S3["Install PostgreSQL 16 (database)"] --> S4["Install pgvector (store and search embeddings)"]
-  S4 --> S5["Copy pgvector extension files into the PostgreSQL folder (vector.dll, vector.control, vector--*.sql)"]
-  S5 --> S6["Enable pgvector in the database (run: CREATE EXTENSION vector)"]
-  S6 --> S7["Create the database (ragdb)"]
-  S7 --> S8["Create tables and indexes (run: sql/rag_setup.sql and sql/rag_extended.sql)"]
+  Ingest["📥 Ingest docs (ingest.py)"] --> Chunk["✂️ Chunk text"]
+  Chunk --> EmbedDocs["🧠 Embed docs (bge-m3)"]
+  EmbedDocs --> Store["🗄️ Store in rag_chunks"]
 
-  S9["Install Python packages (run: pip install -r requirements.txt)"] --> S10["Set database connection settings: PGHOST, PGPORT, PGUSER, PGDATABASE, PGPASSWORD"]
-end
+  U([👤 User asks a question]) --> Q[🧠 Embed question<br/>Ollama: bge-m3]
 
-subgraph Ingest["Step 1: Add documents"]
-  I1["Run: scripts/ingest.py"] --> I2["Split documents into smaller parts"]
-  I2 --> I3["Create an embedding for each part using bge-m3"]
-  I3 --> I4["Save parts + embeddings + extra information into the database (table: rag_chunks)"]
-  I4 --> I5["Create a fast search index for embeddings"]
-end
+  Q --> S[🔎 Vector search in Postgres<br/>pgvector HNSW]
+  S --> R[📦 Top-K chunks + distances]
 
-subgraph Ask["Step 2: Ask a question"]
-  A1["Run: scripts/ask_rag.py"] --> A2["Create an embedding for the question using bge-m3"]
-  A2 --> A3["Search the database for the most similar saved parts"]
-  A3 --> G{"Did we find enough relevant information?"}
-  G -- "No" --> A4["Reply: I do not have enough information to answer"]
-  G -- "Yes" --> A5["Build the prompt: question + the retrieved parts"]
-  A5 --> A6["Generate the answer using gemma3:4b"]
-  A6 --> A7["Save a log entry (table: qa_log) with the question, answer, and which parts were used"]
-  A4 --> A7
-end
+  R --> G{🎯 Relevant enough?}
 
-subgraph Tests["Optional: Run automated tests"]
-  T1["Run: scripts/run_tests.py"] --> T2["Load test questions from a JSON Lines file"]
-  T2 --> T3["For each test: run the same question steps"]
-  T3 --> T4["Store test results (tables: rag_test_runs and rag_test_results)"]
-end
+  G -- "No 😕" --> N[🙅 Reply: Not enough info<br/>Ask user for more context]
+  N --> L1[(📝 Log to qa_log)]
 
-Setup --> Ingest --> Ask --> Tests
+  G -- "Yes ✅" --> C[🧩 Build context prompt<br/>chunks + citations]
+  C --> A[💬 Answer with Ollama<br/>gemma3:4b]
+  A --> L2[(📝 Log to qa_log)]
+
+  L2 --> AU{🕵️ Audit enabled?}
+  AU -- "No" --> DONE([✅ Done])
+
+  AU -- "Yes" --> J[🧪 LLM Judge: quality + groundedness]
+  J --> V{✅ Pass?}
+
+  V -- "Yes" --> DONE
+  V -- "No" --> F[(🗳️ Store feedback / failure)]
+  F --> DONE
+```
+
+---
+
+```mermaid
+
+flowchart LR
+  D[📏 Best distance] --> T{<= RELEVANCE_MAX_DISTANCE?}
+  H[🔢 Relevant hits] --> M{>= MIN_RELEVANT_HITS?}
+  C[🧾 Context length] --> K{>= MIN_CONTEXT_CHARS?}
+
+  T --> G[✅ Gate = Relevant]
+  M --> G
+  K --> G
+
+
+
 ```
