@@ -46,7 +46,7 @@ flowchart TD
   %% --- RAG Retrieval + Relevancy Gate ---
   ROUTE --> Q["🧠 Embed question (bge-m3)"]
   Q --> S[🔎 Search the database for most similar saved parts]
-  S --> R[📦 Pick the 5 most relevant text snippets and how strongly they match the question]
+  S --> R[📦 Pick the most relevant text snippets dynamically  and how strongly they match the question]
 
   R --> G{🎯 Relevant enough?}
 
