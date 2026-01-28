@@ -20,7 +20,7 @@ flowchart TD
     Entry(( )):::hidden
     Entry --> Ingest ["📥 Ingest docs<br/> (scripts/ingest.py)"]
     Ingest--> Chunk ["✂️ Split into chunks"]
-    Chunk --> EmbedDocs["🧠 create embeddingsbr/>(bge-m3)"]
+    Chunk --> EmbedDocs["🧠 create embeddings<br/>(bge-m3)"]
     EmbedDocs --> Store["🗄️ Store in rag_chunks"]
 end
 
