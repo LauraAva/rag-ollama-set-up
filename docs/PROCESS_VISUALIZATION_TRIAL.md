@@ -28,7 +28,7 @@ flowchart TD
 ```mermaid
 flowchart TD
 
-  L1 --> UA([📝 User authentication enabled?])
+  UA(["🔐 User authentication enabled?"])
   UA -- "No ❌" --> N["❌ Access denied"]
 
   UA -- "Yes ✅" --> U["👤 User asks a question"]
