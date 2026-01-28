@@ -39,7 +39,7 @@ flowchart TD
 
   HASRAG -- "No" --> LLMONLY["💬 Ask LLM directly<br/>(no RAG)"]
   LLMONLY --> LOG0[("📝 Log to qa_log)"]
-  LOG0 --> END(["✅ Done"])
+  LOG0 --> END([End])
 
   HASRAG -- "Yes" --> ROUTE["🧭 Route to respective RAG<br/>(client / internal / external)"]
 
