@@ -10,11 +10,12 @@ This page visualizes the full workflow we implemented:
 ```mermaid
 flowchart TD
 
-  subgraph Setup["Setup"]
+  subgraph Setup["Setup<br/>"]
     S1["Install + Configure"] --> S2["DB ready + Models ready"]
   end  
 
-  subgraph Runtime["Runtime"]
+  subgraph Runtime["Runtime<br/>"]
+
     direction TB
 
     R1(( )):::ghost
