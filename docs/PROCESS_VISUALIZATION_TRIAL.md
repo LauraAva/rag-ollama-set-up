@@ -24,7 +24,9 @@ flowchart TD
   R --> G{🎯 Relevant enough?}
 
   G -- "No 😕" --> N[🙅 Reply: Not enough info<br/>Ask user for more context]
-  N --> L1[(📝 Log to qa_log)]
+  N e1@--> L1[(📝 Log to qa_log)]
+  classDef animate stroke-dasharray: 9,5,stroke-dashoffset: 900,animation: dash 25s linear infinite;
+  class e1 animate
 
   G -- "Yes ✅" --> C[🧩 Build context prompt<br/>chunks + citations]
   C --> A[💬 Answer with Ollama<br/>gemma3:4b]
@@ -38,7 +40,7 @@ flowchart TD
 
   V -- "Yes" --> DONE
   V -- "No" --> F[(🗳️ Store feedback / failure)]
-  F --> DONE;
+  F --> DONE ----> E[End]
 
 ```
 
