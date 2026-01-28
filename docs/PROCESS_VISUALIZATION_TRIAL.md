@@ -27,6 +27,12 @@ flowchart TD
 
 ```mermaid
 flowchart TD
+
+  L1 --> UA([📝 User authentication enabled?])
+  UA -- "No"❌" --> N["❌ Access denied"]
+
+  UA -- "Yes" --> U [👤 User asks a question]
+
   U([👤 User asks a question]) --> Q[🧠 Embed question<br/>Ollama: bge-m3]
 
   Q --> S[🔎 Search the database for most similar saved parts]
