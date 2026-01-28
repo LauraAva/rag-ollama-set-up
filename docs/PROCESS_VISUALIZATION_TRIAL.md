@@ -14,17 +14,13 @@ flowchart TD
     S1["Install + Configure"] --> S2["DB ready + Models ready"]
   end  
 
-  subgraph Runtime["Runtime<br/>"]
-    ENTRY(( )):::hidden
-    ENTRY --> Ingest["📥 Ingest docs<br/>(scripts/ingest.py)"]
-    Ingest--> Chunk["✂️ Split into chunks"]
-    Chunk --> EmbedDocs["🧠 create embeddings<br/>(bge-m3)"]
+  S2 --> R0["▶ Start Runtime"]
+  subgraph Runtime["Runtime"]
+    R0 --> Ingest["📥 Ingest docs (ingest.py)"]
+    Ingest --> Chunk["✂️ Chunk text"]
+    Chunk --> EmbedDocs["🧠 Embed docs (bge-m3)"]
     EmbedDocs --> Store["🗄️ Store in rag_chunks"]
   end
-
-
-  S2 --> ENTRY
-  classDef hidden fill:transparent,stroke:transparent,color:transparent;
 
 ```
 ---
