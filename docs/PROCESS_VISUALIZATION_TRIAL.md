@@ -28,12 +28,27 @@ flowchart TD
 ```mermaid
 flowchart TD
 
-  UA(["🔐 User authentication enabled?"])
-  UA -- "No ❌" --> X["❌ Access denied"]
+  START([🚀 Start]) --> AUTH{"🔐 Authentication enabled?"}
 
+  AUTH -- "No" --> ROLE["👤 Treat as anonymous / default role"]
+  AUTH -- "Yes" --> LOGIN["🪪 Authenticate user"]
+  LOGIN --> OK{"✅ Auth success?"}
+  OK -- "No" --> DENY["❌ Access denied"] --> END0([⛔ End])
+  OK -- "Yes" --> ROLE["🏷️ Load user role + groups"]
 
-  UA -- "Yes ✅" --> U["👤 User asks a question"]
-  U --> Q["🧠 Embed question (Ollama: bge-m3)"]
+  ROLE --> PERM["🛡️ Permission check<br/>what data can this user access?"]
+  PERM --> ALLOW{"✅ Has any RAG access?"}
+  ALLOW -- "No" --> DENY --> END0
+
+  ALLOW -- "Yes" --> ROUTER{"🧭 Choose allowed RAG scope<br/>(collection routing)"}
+
+  ROUTER -->|Client RAG| CRAG["🗂️ Client RAG<br/>(collection=client)"]
+  ROUTER -->|Internal RAG| IRAG["🏢 Internal RAG<br/>(collection=internal)"]
+  ROUTER -->|External RAG| ERAG["🌍 External RAG<br/>(collection=external)"]
+
+  CRAG --> QV["🧠 Embed question<br/>(Ollama: bge-m3)"]
+  IRAG --> QV
+  ERAG --> QV
 
   Q --> S[🔎 Search the database for most similar saved parts]
   S --> R[📦 Pick the 5 most relevant text snippets and how strongly they match the question]
