@@ -62,7 +62,7 @@ flowchart TD
   A --> L2[(📝 Log to qa_log)]
 
   %% --- Optional audit ---
-  L2 --> AU{🕵️ Audit enabled?}
+  L2 --> AU{Optional:🕵️ Audit enabled?}
   AU -- "No" --> DONE([✅ Done])
 
   AU -- "Yes" --> J[🧪 LLM Judge: quality + groundedness]
