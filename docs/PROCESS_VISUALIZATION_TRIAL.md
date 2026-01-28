@@ -18,8 +18,8 @@ flowchart TD
 
   U([👤 User asks a question]) --> Q[🧠 Embed question<br/>Ollama: bge-m3]
 
-  Q --> S[🔎 Vector search in Postgres<br/>pgvector HNSW]
-  S --> R[📦 Top-K chunks + distances]
+  Q --> S[🔎 Search the database for most similar saved parts]
+  S --> R[📦 Pick the 5 most relevant text snippets and how strongly they match the question]
 
   R --> G{🎯 Relevant enough?}
 
@@ -52,14 +52,17 @@ DONE --> E["🏁 End"]
 ```mermaid
 
 flowchart LR
-  D[📏 Best distance] --> T{<= RELEVANCE_MAX_DISTANCE?}
-  H[🔢 Relevant hits] --> M{>= MIN_RELEVANT_HITS?}
-  C[🧾 Context length] --> K{>= MIN_CONTEXT_CHARS?}
 
-  T --> G[✅ Gate = Relevant]
-  M --> G
-  K --> G
+  D["📏 Best similarity score"] --> T{"score ≤ MAX_DISTANCE?"}
+  H["🔢 Relevant chunks found"] --> M{"hits ≥ MIN_HITS?"}
+  C["🧾 Context length"] --> K{"chars ≥ MIN_CONTEXT_CHARS?"}
 
+  T --> AND{"All checks pass?"}
+  M --> AND
+  K --> AND
+
+  AND -- "Yes ✅" --> G["✅ Relevant → Use RAG context"]
+  AND -- "No ❌" --> N["❌ Not relevant → No-RAG / ask for more info"]
 
 
 ```
