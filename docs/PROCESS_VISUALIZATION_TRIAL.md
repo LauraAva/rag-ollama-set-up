@@ -26,6 +26,7 @@ flowchart TD
 ---
 
 ```mermaid
+flowchart TD
   U([👤 User asks a question]) --> Q[🧠 Embed question<br/>Ollama: bge-m3]
 
   Q --> S[🔎 Search the database for most similar saved parts]
