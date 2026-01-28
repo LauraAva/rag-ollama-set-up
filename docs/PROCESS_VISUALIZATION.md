@@ -1,83 +1,45 @@
 # \# Process Visualization — rag-ollama-set-up (end-to-end)
 
-# 
-
-\## 1) Big Picture: Setup → Runtime
-
 
 
 ```mermaid
-
 flowchart TD
 
-&nbsp; %% ===== SETUP =====
+subgraph Setup["Setup (do this once)"]
+  S1["Install Ollama (runs the local AI models)"] --> S2["Download the models: bge-m3 (creates embeddings), gemma3:4b (writes answers)"]
 
-&nbsp; subgraph Setup\["Setup / Installation"]
+  S3["Install PostgreSQL 16 (database)"] --> S4["Install pgvector (store and search embeddings)"]
+  S4 --> S5["Copy pgvector extension files into the PostgreSQL folder (vector.dll, vector.control, vector--*.sql)"]
+  S5 --> S6["Enable pgvector in the database (run: CREATE EXTENSION vector)"]
+  S6 --> S7["Create the database (ragdb)"]
+  S7 --> S8["Create tables and indexes (run: sql/rag_setup.sql and sql/rag_extended.sql)"]
 
-&nbsp;   A\["Install Ollama"] --> A2\["Pull models<br/>bge-m3 + gemma3:4b"]
+  S9["Install Python packages (run: pip install -r requirements.txt)"] --> S10["Set database connection settings: PGHOST, PGPORT, PGUSER, PGDATABASE, PGPASSWORD"]
+end
 
-&nbsp;   B\["Install PostgreSQL 16"] --> C\["Install pgvector"]
+subgraph Ingest["Step 1: Add documents"]
+  I1["Run: scripts/ingest.py"] --> I2["Split documents into smaller parts"]
+  I2 --> I3["Create an embedding for each part using bge-m3"]
+  I3 --> I4["Save parts + embeddings + extra information into the database (table: rag_chunks)"]
+  I4 --> I5["Create a fast search index for embeddings"]
+end
 
-&nbsp;   C --> C1\["Copy vector.dll + vector.control + vector--\*.sql into PGROOT"]
+subgraph Ask["Step 2: Ask a question"]
+  A1["Run: scripts/ask_rag.py"] --> A2["Create an embedding for the question using bge-m3"]
+  A2 --> A3["Search the database for the most similar saved parts"]
+  A3 --> G{"Did we find enough relevant information?"}
+  G -- "No" --> A4["Reply: I do not have enough information to answer"]
+  G -- "Yes" --> A5["Build the prompt: question + the retrieved parts"]
+  A5 --> A6["Generate the answer using gemma3:4b"]
+  A6 --> A7["Save a log entry (table: qa_log) with the question, answer, and which parts were used"]
+  A4 --> A7
+end
 
-&nbsp;   C1 --> C2\["CREATE EXTENSION vector"]
+subgraph Tests["Optional: Run automated tests"]
+  T1["Run: scripts/run_tests.py"] --> T2["Load test questions from a JSON Lines file"]
+  T2 --> T3["For each test: run the same question steps"]
+  T3 --> T4["Store test results (tables: rag_test_runs and rag_test_results)"]
+end
 
-&nbsp;   C2 --> D\["Create DB: ragdb"]
-
-&nbsp;   D --> E\["Run schema SQL<br/>sql/rag\_setup.sql + sql/rag\_extended.sql"]
-
-&nbsp;   F\["Install Python deps<br/>pip install -r requirements.txt"] --> G\["Set env vars<br/>PGHOST/PGPORT/PGUSER/PGDATABASE/PGPASSWORD"]
-
-&nbsp; end
-
-
-
-&nbsp; %% ===== RUNTIME =====
-
-&nbsp; subgraph Runtime\["Runtime / Usage"]
-
-&nbsp;   H\["Ingest documents<br/>scripts/ingest.py"] --> H1\["Chunk text"]
-
-&nbsp;   H1 --> H2\["Embed chunks via Ollama<br/>(bge-m3)"]
-
-&nbsp;   H2 --> H3\["Insert into rag\_chunks<br/>+ metadata"]
-
-&nbsp;   H3 --> H4\["HNSW index for fast vector search"]
-
-
-
-&nbsp;   Q\["Ask question<br/>scripts/ask\_rag.py"] --> Q1\["Embed question via Ollama<br/>(bge-m3)"]
-
-&nbsp;   Q1 --> Q2\["Vector search top-k<br/>(cosine distance)"]
-
-&nbsp;   Q2 --> Gate{"Relevant?"}
-
-&nbsp;   Gate -- "no" --> QNR\["Answer: not enough info<br/>(or fallback)"]
-
-&nbsp;   Gate -- "yes" --> Q3\["Build prompt with retrieved context"]
-
-&nbsp;   Q3 --> Q4\["Generate answer via Ollama<br/>(gemma3:4b)"]
-
-&nbsp;   Q4 --> Log\["Log into qa\_log<br/>question, answer, chunk ids"]
-
-&nbsp;   QNR --> Log
-
-
-
-&nbsp;   T\["Run test suite<br/>scripts/run\_tests.py"] --> T1\["Load tests JSONL"]
-
-&nbsp;   T1 --> T2\["Execute ask flow per case"]
-
-&nbsp;   T2 --> T3\["Store results<br/>rag\_test\_runs + rag\_test\_results"]
-
-&nbsp; end
-
-
-
-&nbsp; Setup --> Runtime
-
+Setup --> Ingest --> Ask --> Tests
 ```
-
-
-
-
