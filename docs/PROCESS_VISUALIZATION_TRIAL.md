@@ -54,7 +54,7 @@ flowchart TD
   F --> DONE
 end
 
-DONE --> E["🏁 End"]
+DONE --> E
 
 ```
 
