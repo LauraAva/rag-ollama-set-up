@@ -16,8 +16,8 @@ flowchart TD
 
   subgraph Runtime["Runtime<br/>"]
     ENTRY(( )):::hidden
-    ENTRY --> Ingest ["📥 Ingest docs<br/>(scripts/ingest.py)"]
-    Ingest--> Chunk ["✂️ Split into chunks"]
+    ENTRY --> Ingest["📥 Ingest docs<br/>(scripts/ingest.py)"]
+    Ingest--> Chunk["✂️ Split into chunks"]
     Chunk --> EmbedDocs["🧠 create embeddings<br/>(bge-m3)"]
     EmbedDocs --> Store["🗄️ Store in rag_chunks"]
   end
