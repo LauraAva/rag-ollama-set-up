@@ -42,8 +42,8 @@ flowchart TD
   HASACCESS -- "Yes" --> ROUTE[RAG routing rules]
 
   ROUTE --> HASRAG{Is there a RAG for this question?}
-  HASRAG -- "No" --> LLMONLY[Ask LLM directly (no RAG)]
-  HASRAG -- "Yes" --> QEMB[Embed question (bge-m3)]
+  HASRAG -- "No" --> LLMONLY["Ask LLM directly (no RAG)"]
+  HASRAG -- "Yes" --> QEMB["Embed question (bge-m3)"]
   
 
   Q --> S[🔎 Search the database for most similar saved parts]
