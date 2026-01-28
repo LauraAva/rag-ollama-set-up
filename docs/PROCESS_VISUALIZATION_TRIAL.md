@@ -14,6 +14,7 @@ flowchart TD
     S1["Install + Configure"] --> S2["DB ready + Models ready"]
   end  
 
+  %% Put the entry node OUTSIDE the Runtime subgraph
   S2 --> R0["▶ Start Runtime"]
 
   subgraph Runtime 
