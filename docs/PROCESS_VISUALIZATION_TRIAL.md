@@ -52,7 +52,6 @@ flowchart TD
   V -- "Yes" --> DONE
   V -- "No" --> F[(🗳️ Store feedback / failure)]
   F --> DONE
-end
 
 ```
 
