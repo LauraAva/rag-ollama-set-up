@@ -31,8 +31,8 @@ flowchart TD
   L1 --> UA([📝 User authentication enabled?])
   UA -- "No ❌" --> N["❌ Access denied"]
 
-  UA -- "Yes" --> UX [👤 User asks a question]
-  UX --> U([👤 User asks a question]) --> Q[🧠 Embed question<br/>Ollama: bge-m3]
+  UA -- "Yes ✅" --> U["👤 User asks a question"]
+  U --> Q["🧠 Embed question (Ollama: bge-m3)"]
 
   Q --> S[🔎 Search the database for most similar saved parts]
   S --> R[📦 Pick the 5 most relevant text snippets and how strongly they match the question]
