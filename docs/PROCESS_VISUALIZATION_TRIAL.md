@@ -23,7 +23,7 @@ flowchart TD
   end
 
 
-  S2 --> ENTRY
+  S2 --> Entry
   classDef hidden fill:transparent,stroke:transparent,color:transparent;
 
 ```
