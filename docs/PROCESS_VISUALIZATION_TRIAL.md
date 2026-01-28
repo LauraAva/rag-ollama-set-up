@@ -16,9 +16,8 @@ flowchart TD
 
   subgraph Runtime["Runtime<br/>"]
 
-    direction TB
 
-    R1(( )):::ghost
+    R1(( )):::hidden
     R2["📥 Ingest docs (scripts/ingest.py)"] --> R3["✂️ Chunk text"] --> R4["🧠 Embed docs (bge-m3)"] --> R5["🗄️ Store in rag_chunks"]
 
     R1 --> R2
