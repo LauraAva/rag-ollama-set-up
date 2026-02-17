@@ -32,12 +32,30 @@ def get_vector_dim(cur) -> int:
         raise RuntimeError("Could not determine vector dimension for rag_chunks.embedding")
     return int(row[0])
 
+def get_collection_id(cur, name: str) -> int:
+    cur.execute("SELECT id FROM rag_collections WHERE name=%s", (name,))
+    row = cur.fetchone()
+    if row:
+        return int(row[0])
+
+    cur.execute(
+        """
+        INSERT INTO rag_collections (name, sensitivity_level)
+        VALUES (%s, 0)
+        RETURNING id
+        """,
+        (name,),
+    )
+    return int(cur.fetchone()[0])
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=50)
     ap.add_argument("--only-verified", action="store_true")
     ap.add_argument("--since-hours", type=int, default=None)
     ap.add_argument("--source", default="qa_promoted")
+    ap.add_argument("--collection", default=os.getenv("DEFAULT_COLLECTION", "public"))
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -58,6 +76,7 @@ def main():
         register_vector(conn)
         with conn.cursor() as cur:
             dim = get_vector_dim(cur)
+            collection_id = get_collection_id(cur, args.collection)
 
             cur.execute(f"""
                 SELECT id, question, answer, created_at
@@ -96,11 +115,11 @@ def main():
 
                 cur.execute(
                     """
-                    INSERT INTO rag_chunks (source, chunk_index, content, metadata, embedding)
-                    VALUES (%s, %s, %s, %s, %s)
+                    INSERT INTO rag_chunks (source, chunk_index, content, metadata, embedding, collection_id)
+                    VALUES (%s, %s, %s, %s, %s, %s)
                     RETURNING id
                     """,
-                    (args.source, 0, content, json.dumps(meta), Vector(vec))
+                    (args.source, 0, content, json.dumps(meta), Vector(vec), collection_id)
                 )
                 chunk_id = cur.fetchone()[0]
 
@@ -112,7 +131,10 @@ def main():
 
             conn.commit()
 
-    print(f"Promoted {promoted} Q/A rows into rag_chunks (source={args.source}).")
+    print(
+        f"Promoted {promoted} Q/A rows into rag_chunks "
+        f"(source={args.source}, collection={args.collection})."
+    )
 
 if __name__ == "__main__":
     main()

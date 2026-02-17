@@ -19,6 +19,58 @@ Local RAG (Retrieval-Augmented Generation) setup using:
 
 ---
 
+## Quickstart
+
+### 1) Create venv + install Python dependencies
+
+```bash
+python -m venv .venv
+source .venv/bin/activate  # Windows PowerShell: .venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+### 2) Ensure PostgreSQL and pgvector are installed
+
+- PostgreSQL **16+** is required.
+- Build/install pgvector (Windows instructions):
+  - [docs/PGVECTOR_BUILD_Windows.md](docs/PGVECTOR_BUILD_Windows.md)
+
+### 3) Create database and run schema
+
+```bash
+createdb ragdb
+psql -d ragdb -f sql/rag_setup.sql
+```
+
+> If your environment uses connection variables, set `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`, and `PGDATABASE=ragdb` before running scripts.
+
+### 4) Pull required Ollama models
+
+```bash
+ollama pull bge-m3
+ollama pull gemma3:4b
+```
+
+### 5) Ingest sample docs
+
+```bash
+python scripts/ingest.py --path sample_docs --collection public --source local
+```
+
+### 6) Ask questions with RAG
+
+```bash
+python scripts/ask_rag.py "What is this project about?" --collection public
+```
+
+### 7) Promote prior Q&A back into chunks
+
+```bash
+python scripts/promote_qa_to_chunks.py --collection public --only-verified --limit 50
+```
+
+---
+
 ## Folder Layout
 
 ```text
@@ -39,3 +91,4 @@ rag-ollama-set-up/
 │   └── promote_qa_to_chunks.py
 └── sample_docs/
     └── intro.txt
+```
